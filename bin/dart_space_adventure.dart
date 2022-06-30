@@ -107,10 +107,9 @@ Planet randomize() {
 void main(List<String> args) {
   // Tell user how to use program
   if (args.length != 1) {
-    print(
-      "USAGE: \$main.dart path_to_json\n"
-      "Ex: \$bin/dart_space_adventure.dart assets/planetarySystem.json\n",
-    );
+    print("USAGE: \$main.dart path_to_json\n");
+    // Terminate & exit program
+    exit(0);
   }
 
   // Set filePath to path user specified
