@@ -11,7 +11,10 @@ import 'package:dart_space_adventure/dart_space_adventure.dart';
   - main fxn
 */
 void main(List<String> args) {
-  runProgram(args);
+  // Instantiate SpaceAdventure class
+  SpaceAdventure journey = SpaceAdventure();
+  // Start program
+  journey.runProgram(args);
 }
 
 
