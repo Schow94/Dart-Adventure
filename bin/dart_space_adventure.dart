@@ -52,7 +52,7 @@ bool getInput() {
     }
     // User didn't enter Y or N - Keep prompting user for response
     else {
-      print("I'm sorry, I didn't get that\n");
+      print("Sorry, I didn't get that\n");
       // Read user input from stdin
       userResponse = stdin.readLineSync() ?? '';
       // Convert user input to lowercase
@@ -64,28 +64,27 @@ bool getInput() {
 
 /*
   - Read JSON for Planetary System
+  - Currently synchronous since I don't want it to be asynchronous
+  - Non-blocking was messing me up
 */
-void readJson() async {
+void readJson() {
   var config = File(filePath);
-  var stringContents = await config.readAsString(); // String
+  var stringContents = config.readAsStringSync(); // String
   // Convert String to JSON
   jsonData = jsonDecode(stringContents); // JSON
 
   jsonData["planets"].forEach((e) {
     planets.add(Planet(e['name'], e['description']));
   });
-
-  for (Planet i in planets) {
-    print(i.name);
-  }
-
-  // Don't have access to jsonData outside of this fxn
 }
 
 /*
   - main fxn
 */
 void main() {
+  // Load planet data from planetarySystem.json
+  readJson();
+
   // Greet user. Get user's name
   print(
     "Welcome to the Solar System!\n"
@@ -106,16 +105,29 @@ void main() {
   // true = randomPlanet
   // false = Not a randomPlanet
   bool randomPlanet = getInput();
+  // User chose a RANDOM planet
   if (randomPlanet) {
     print("Selecting a random planet");
-  } else {
-    print("What planet did you want to select?");
   }
+  // User chose a SPECIFIC planet
+  else {
+    print("What planet did you want to select?");
+    String usersPlanet = stdin.readLineSync() ?? '';
 
-  // Read planetarySystem.json
-  readJson();
+    Planet destination = Planet('Null', 'Null');
 
-  print(planets);
+    // Loop through planets list
+    for (Planet p in planets) {
+      // Check if planet in planets List
+      if (p.name == usersPlanet) {
+        destination = p;
+      }
+    }
+
+    // Fly to planet user chose
+    print("Travleing to $usersPlanet...");
+    print("Arrived at ${destination.name}. ${destination.description}");
+  }
 }
 
 
