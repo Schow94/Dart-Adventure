@@ -10,9 +10,23 @@ import 'dart:convert';
 
 import 'package:dart_space_adventure/dart_space_adventure.dart'
     as dart_space_adventure;
+import 'package:test/expect.dart';
+
+const filePath = "./assets/planetarySystem.json";
+
+// Classes
+class Planet {
+  final String name;
+  final String description;
+
+  // Constructor
+  Planet(this.name, this.description);
+}
 
 // JSON DATA
 var jsonData = {};
+
+List<Planet> planets = [];
 
 /*
   - getInput from user
@@ -52,14 +66,20 @@ bool getInput() {
   - Read JSON for Planetary System
 */
 void readJson() async {
-  var config = File("./assets/planetarySystem.json");
+  var config = File(filePath);
   var stringContents = await config.readAsString(); // String
   // Convert String to JSON
   jsonData = jsonDecode(stringContents); // JSON
 
-  // Don't have access to jsonData outside of this fxn
+  jsonData["planets"].forEach((e) {
+    planets.add(Planet(e['name'], e['description']));
+  });
 
-  print(jsonData);
+  for (Planet i in planets) {
+    print(i.name);
+  }
+
+  // Don't have access to jsonData outside of this fxn
 }
 
 /*
@@ -94,6 +114,8 @@ void main() {
 
   // Read planetarySystem.json
   readJson();
+
+  print(planets);
 }
 
 
