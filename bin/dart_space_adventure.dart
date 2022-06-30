@@ -92,7 +92,8 @@ void travel(chosenPlanet) => print(
     );
 
 /*
-  
+  - Get randome idx for planets List
+  - Use random idx to get random planet in planets List
 */
 Planet randomize() {
   // Random idx in planets list
@@ -102,9 +103,63 @@ Planet randomize() {
 }
 
 /*
-  - main fxn
+  - Greet & welcome user
 */
-void main(List<String> args) {
+void greetUser() => print(
+      "Welcome to the Solar System!\n"
+      "There are ${planets.length} planets to explore\n"
+      "What is your name?",
+    );
+
+/*
+  - Get user's name from stdin
+  - Introduce self to user
+*/
+void introduceSelf() {
+  // Read user's name from stdin
+  String name = stdin.readLineSync() ?? '';
+  print(
+    "Nice to meet you $name. My name is GOD, I'm an old friend of Alexa\n"
+    "Let's go on an adventure!",
+  );
+}
+
+/*
+  - Choose planet (random or specific)
+*/
+Planet choosePlanet() {
+  // Get input from user (true = randomPlanet, false = Not a randomPlanet)
+  bool randomPlanetChosen = getInput();
+
+  // Initialize destation to be Null
+  Planet destination = Planet('Null', 'Null');
+
+  // User chose a RANDOM planet
+  if (randomPlanetChosen) {
+    // Select random planet
+    destination = randomize();
+  }
+  // User chose a SPECIFIC planet
+  else {
+    // Prompt user for what planet they'd like to visit
+    String usersPlanet = stdin.readLineSync() ?? '';
+
+    // Loop through planets list
+    for (Planet p in planets) {
+      // Check if planet in planets List
+      if (p.name == usersPlanet) {
+        destination = p;
+      }
+    }
+  }
+
+  return destination;
+}
+
+/*
+  - Read CL args
+*/
+void checkArgs(args) {
   // Tell user how to use program
   if (args.length != 1) {
     print("USAGE: \$main.dart path_to_json\n");
@@ -114,54 +169,25 @@ void main(List<String> args) {
 
   // Set filePath to path user specified
   filePath = args[0];
+}
+
+/*
+  - main fxn
+*/
+void main(List<String> args) {
+  checkArgs(args);
 
   // Load planet data from planetarySystem.json
   readJson();
 
   // Greet user. Get user's name
-  print(
-    "Welcome to the Solar System!\n"
-    "There are 9 planets to explore\n"
-    "What is your name?",
-  );
+  greetUser();
 
-  // Read user's name from stdin
-  String name = stdin.readLineSync() ?? '';
+  // Introduce self to user
+  introduceSelf();
 
-  print(
-    "Nice to meet you $name. My name is Stephen, I'm an old friend of Alexa\n"
-    "Let's go on an adventure!",
-  );
-
-  // Get input from user
-  // true = randomPlanet
-  // false = Not a randomPlanet
-  bool randomPlanetChosen = getInput();
-  // User chose a RANDOM planet
-  if (randomPlanetChosen) {
-    print("Selecting a random planet");
-    // Select random planet
-    Planet randomPlanet = randomize();
-    travel(randomPlanet);
-  }
-  // User chose a SPECIFIC planet
-  else {
-    print("What planet did you want to select?");
-    String usersPlanet = stdin.readLineSync() ?? '';
-
-    Planet destination = Planet('Null', 'Null');
-
-    // Loop through planets list
-    for (Planet p in planets) {
-      // Check if planet in planets List
-      if (p.name == usersPlanet) {
-        destination = p;
-      }
-    }
-
-    // Fly to planet user chose
-    travel(destination);
-  }
+  // Fly to planet user chose or random planet
+  travel(choosePlanet());
 }
 
 
